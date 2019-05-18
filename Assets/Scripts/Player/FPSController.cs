@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using LiteNetLib;
+using LiteNetLib.Utils;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Player))]
 public class FPSController : MonoBehaviour {
 
     public Text tileText;
     private Rigidbody rb;
+    private Player player;
 
     public float speed = 10f;
     public float gravity = 10f;
@@ -17,12 +21,21 @@ public class FPSController : MonoBehaviour {
 
     private bool grounded = false;
 
+    private NetDataWriter writer;
+
     void Start() {
+        player = GetComponent<Player>();
+
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         rb.useGravity = false;
 
         StartCoroutine(BreathingLoop());
+
+        // Networking
+        writer = new NetDataWriter();
+
+        StartCoroutine(SendMovement_Coroutine());
     }
 
     void FixedUpdate() {
@@ -97,6 +110,16 @@ public class FPSController : MonoBehaviour {
                     
                 }
             }
+        }
+    }
+
+    private IEnumerator SendMovement_Coroutine() {
+        while (true) {
+            Packet04PlayerMove playerMove = new Packet04PlayerMove(player.guid, transform.position, transform.eulerAngles);
+            playerMove.Serialize(writer);
+            Client.Instance.SendDataToServer(writer, DeliveryMethod.Unreliable);
+
+            yield return new WaitForSeconds(0.1f);
         }
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WorldObject : MonoBehaviour {
 
-    public int health = 100;
-    public bool airTight = true;
+    public string UNIQUE_ID;
+    public GameObject clientPrefab;
 
 }

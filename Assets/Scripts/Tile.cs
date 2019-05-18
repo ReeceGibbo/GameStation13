@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile : WorldObject {
+public class Tile : MonoBehaviour {
 
     public WorldObject[] surrounded;
 
@@ -44,7 +44,7 @@ public class Tile : WorldObject {
 
     private void UpdatePressure() {
         for (int g = 0; g < gasMixture.gases.Length; g++) {
-            float maximumGiveAmount = gasMixture.gases[g] / (1f + surroundedTiles.Count);
+            float maximumGiveAmount = gasMixture.gases[g] / (0.1f * (1f + surroundedTiles.Count));
 
             foreach (Tile tile in surroundedTiles) {
                 if (tile != null) {
@@ -52,8 +52,8 @@ public class Tile : WorldObject {
                         float difference = gasMixture.gases[g] - tile.gasMixture.gases[g];
 
                         if (difference <= maximumGiveAmount) {
-                            tile.gasMixture.gases[g] += difference / 2f;
-                            gasMixture.gases[g] -= difference / 2f;
+                            tile.gasMixture.gases[g] += 0.1f * (difference / 2f);
+                            gasMixture.gases[g] -= 0.1f * (difference / 2f);
                         }
                         else {
                             tile.gasMixture.gases[g] += maximumGiveAmount;
@@ -87,6 +87,7 @@ public class Tile : WorldObject {
     }
 
     public void UpdateContainment() {
+        /*
         for (int x = 0; x < surrounded.Length; x++) {
             if (surrounded[x] != null && surrounded[x].airTight) {
                 isContained = true;
@@ -96,6 +97,7 @@ public class Tile : WorldObject {
                 return;
             }
         }
+        */
     }
 
     public void AddPressure(float kPa, int gasIndex) {
