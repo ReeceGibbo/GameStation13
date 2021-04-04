@@ -1,5 +1,4 @@
 # GameStation13
-Working on a game in unity that is inspired by Space Station 13.
-Atmospheric simulation up and running.
+Small project to simulate atmosphere in space, inspired by Space Station 13.
 
 ![Imgur](https://i.imgur.com/YNI5EvQ.png)
